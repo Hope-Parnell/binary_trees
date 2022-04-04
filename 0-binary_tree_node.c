@@ -32,5 +32,5 @@ binary_tree_t *binary_tree_node(binary_tree_t *parent, int value)
 		else /*left child already exists*/
 			parent->right = new;
 	}
-	return new;
+	return (new);
 }
