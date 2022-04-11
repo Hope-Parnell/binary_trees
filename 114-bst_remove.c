@@ -30,26 +30,26 @@ bst_t *bst_delete(bst_t *root, bst_t *hide)
 	bst_t *parent = hide->parent, *successor = NULL;
 
 	/* No children or right-child only */
-	if (hide->left == NULL)
+	if (!hide->left)
 	{
-		if (parent != NULL && parent->left == hide)
+		if (parent && parent->left == hide)
 			parent->left = hide->right;
-		else if (parent != NULL)
+		else if (parent)
 			parent->right = hide->right;
-		if (hide->right != NULL)
+		if (hide->right)
 			hide->right->parent = parent;
 		free(hide);
 		return (parent == NULL ? hide->right : root);
 	}
 
 	/* Left-child only */
-	if (hide->right == NULL)
+	if (!hide->right)
 	{
-		if (parent != NULL && parent->left == hide)
+		if (parent && parent->left == hide)
 			parent->left = hide->left;
-		else if (parent != NULL)
+		else if (parent)
 			parent->right = hide->left;
-		if (hide->left != NULL)
+		if (hide->left)
 			hide->left->parent = parent;
 		free(hide);
 		return (parent == NULL ? hide->left : root);
