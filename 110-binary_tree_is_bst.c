@@ -1,4 +1,25 @@
 #include "binary_trees.h"
+#include <limits.h>
+
+/**
+ * bstHelper - helps determine if a binary tree is a bst
+ * @node: node to check
+ * @min: min value for node
+ * @max: max value for node
+ *
+ * Return: 1 if meets requiremnets otherwise 0
+ */
+
+int bstHelper(const binary_tree_t *node, int min, int max)
+{
+	if (!node)
+		return (1);
+	if (node->n < min || node->n > max)
+		return (0);
+	return (bstHelper(node->left, min, node->n - 1)
+			&& bstHelper(node->right, node->n + 1, max));
+}
+
 
 /**
  * binary_tree_is_bst - check if binary tree is search tree
@@ -8,20 +29,7 @@
  */
 int binary_tree_is_bst(const binary_tree_t *tree)
 {
-	int l = -1, r = -1;
-
-	if (!tree || (tree->left && tree->left->n > tree->n)
-		|| (tree->right && tree->right->n < tree->n))
+	if (!tree)
 		return (0);
-	if (tree->left)
-		l = binary_tree_is_bst(tree->left);
-	if (tree->right)
-		r = binary_tree_is_bst(tree->right);
-	if (l == 0 || r == 0)
-		return (0);
-	if (l == 1 && tree->left->right && tree->left->right->n > tree->n)
-		return (0);
-	if (r == 1 && tree->right->left && tree->right->left->n <  tree->n)
-		return (0);
-	return (1);
+	return(bstHelper(tree, INT_MIN, INT_MAX));
 }
