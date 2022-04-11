@@ -1,41 +1,58 @@
 #include "binary_trees.h"
+
 /**
+ * bst_delete - Deletes a node from a binary search tree.
+ * @root: A pointer to the root node of the BST.
+ * @node: A pointer to the node to delete from the BST.
  *
+ * Return: A pointer to the new root node after deletion.
+ */
+bst_t *bst_delete(bst_t *root, bst_t *hide)
+{
+	bst_t *parent = hide->parent, *seek = NULL;
+
+	/* No children or right-child only */
+	if (!hide->left)
+	{
+		if (parent && parent->left == hide)
+			parent->left = hide->right;
+		else if (parent)
+			parent->right = hide->right;
+		if (hide->right)
+			hide->right->parent = parent;
+		free(hide);
+		return (parent ? root : hide->right);
+	}
+	if (!hide->right)
+	{
+		if (parent && parent->left == hide)
+			parent->left = hide->left;
+		else if (parent)
+			parent->right = hide->left;
+		if (hide->left)
+			hide->left->parent = parent;
+		free(hide);
+		return (parent ? root : hide->left);
+	}
+	for (seek = hide->right; seek->left; seek = seek->left)
+		hide->n = seek->n;
+	return (bst_delete(root, seek));
+}
+
+/**
+ * bst_remove - Removes a node from a binary search tree.
+ * @root: A pointer to the root node of the BST to remove a node from.
+ * @value: The value to remove in the BST.
+ *
+ * Return: A pointer to the new root node after deletion.
+ *
+ * Description: If the node to be deleted has two children, it
+ *              is replaced with its first in-order successor.
  */
 bst_t *bst_remove(bst_t *root, int value)
 {
-	bst_t *hide, *seek, *child = NULL;
-
-	seek = bst_search(root, value);
-	if (!seek)
-		return (root);
-	if (seek->left && seek->right)
-	{
-		for (hide = seek->right; hide->left; hide = hide->left)
-		;
-		seek->n = hide->n;
-		hide->parent->left = NULL;
-		free(hide);
-		return (root);
-	}
-	else
-	{
-		if (seek->right)
-			child = seek->right;
-		if (seek->left)
-			child = seek->left;
-		if (seek == root)
-			root = child;
-		else if (seek->parent->left == seek)
-			seek->parent->left = child;
-		else
-			seek->parent->right = child;
-		free(seek);
-		return (root);
-	}
-	return (root);
+	return (bst_delete(root, bst_search(root, value)));
 }
-
 /**
  * bst_search - search for a value in a bst
  * @tree: root of tree to search
