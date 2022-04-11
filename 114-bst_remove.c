@@ -1,5 +1,23 @@
 #include "binary_trees.h"
 
+bst_t *inorder_successor(bst_t *root);
+bst_t *bst_delete(bst_t *root, bst_t *node);
+bst_t *bst_remove_recursive(bst_t *root, bst_t *node, int value);
+bst_t *bst_remove(bst_t *root, int value);
+
+/**
+ * inorder_successor - Returns the minimum value of a binary search tree.
+ * @root: A pointer to the root node of the BST to search.
+ *
+ * Return: The minimum value in @tree.
+ */
+bst_t *inorder_successor(bst_t *root)
+{
+	while (root->left != NULL)
+		root = root->left;
+	return (root);
+}
+
 /**
  * bst_delete - Deletes a node from a binary search tree.
  * @root: A pointer to the root node of the BST.
@@ -11,30 +29,36 @@ bst_t *bst_delete(bst_t *root, bst_t *hide)
 {
 	bst_t *parent = hide->parent, *successor = NULL;
 
-	if (!hide->left)
+	/* No children or right-child only */
+	if (hide->left == NULL)
 	{
-		if (parent && parent->left == hide)
+		if (parent != NULL && parent->left == hide)
 			parent->left = hide->right;
-		else if (parent)
+		else if (parent != NULL)
 			parent->right = hide->right;
-		if (hide->right)
+		if (hide->right != NULL)
 			hide->right->parent = parent;
 		free(hide);
-		return (!parent ? hide->right : root);
+		return (parent == NULL ? hide->right : root);
 	}
-	if (!hide->right)
+
+	/* Left-child only */
+	if (hide->right == NULL)
 	{
-		if (parent && parent->left == hide)
+		if (parent != NULL && parent->left == hide)
 			parent->left = hide->left;
-		else if (parent)
+		else if (parent != NULL)
 			parent->right = hide->left;
-		if (hide->left)
+		if (hide->left != NULL)
 			hide->left->parent = parent;
 		free(hide);
-		return (!parent ? hide->left : root);
+		return (parent == NULL ? hide->left : root);
 	}
-	for (successor = hide->right; successor->left; successor = successor->left)
-		hide->n = successor->n;
+
+	/* Two children */
+	successor = inorder_successor(hide->right);
+	hide->n = successor->n;
+
 	return (bst_delete(root, successor));
 }
 
@@ -48,7 +72,7 @@ bst_t *bst_delete(bst_t *root, bst_t *hide)
  */
 bst_t *bst_remove_recursive(bst_t *root, bst_t *seek, int value)
 {
-	if (seek)
+	if (seek != NULL)
 	{
 		if (seek->n == value)
 			return (bst_delete(root, seek));
