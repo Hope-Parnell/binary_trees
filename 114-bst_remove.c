@@ -52,6 +52,8 @@ bst_t *bst_delete(bst_t *root, bst_t *hide)
  */
 bst_t *bst_remove(bst_t *root, int value)
 {
+	if (!root)
+		return (NULL);
 	return (bst_delete(root, bst_search(root, value)));
 }
 /**
