@@ -15,6 +15,8 @@ bst_t *bst_remove(bst_t *root, int value)
 		;
 		seek->n = hide->n;
 		hide->parent->left = NULL;
+		free(hide);
+		return (root);
 	}
 	else
 	{
@@ -28,9 +30,9 @@ bst_t *bst_remove(bst_t *root, int value)
 			seek->parent->left = child;
 		else
 			seek->parent->right = child;
-		hide = seek;
+		free(seek);
+		return (root);
 	}
-	free(hide);
 	return (root);
 }
 
