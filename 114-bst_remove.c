@@ -11,7 +11,8 @@ bst_t *bst_delete(bst_t *root, bst_t *hide)
 {
 	bst_t *parent = hide->parent, *seek = NULL;
 
-	/* No children or right-child only */
+	if (!hide)
+		return (root);
 	if (!hide->left)
 	{
 		if (parent && parent->left == hide)
